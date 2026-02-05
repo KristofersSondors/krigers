@@ -11,7 +11,8 @@
       "Bash(find:*)",
       "Bash(findstr:*)",
       "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\vacation.jpeg\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\gallery\\\\vacation.jpeg\")",
-      "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\whoisthat.png\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\gallery\\\\whoisthat.png\")"
+      "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\whoisthat.png\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\gallery\\\\whoisthat.png\")",
+      "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\aboutme.jpg\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\aboutme.jpg\")"
     ]
   }
 }
