@@ -8,7 +8,10 @@
       "Bash(npm install:*)",
       "Bash(curl:*)",
       "Bash(npx astro build)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(findstr:*)",
+      "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\vacation.jpeg\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\gallery\\\\vacation.jpeg\")",
+      "Bash(copy \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\whoisthat.png\" \"c:\\\\Users\\\\eseli\\\\Downloads\\\\Portofo-main\\\\Portofo-main\\\\public\\\\gallery\\\\whoisthat.png\")"
     ]
   }
 }

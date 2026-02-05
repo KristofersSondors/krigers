@@ -1,0 +1,169 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+const galleryDir = path.join(process.cwd(), 'public', 'gallery');
+const exts = new Set(['.jpeg', '.jpg', '.png', '.webp', '.avif', '.gif']);
+
+const files = fs.existsSync(galleryDir)
+  ? fs.readdirSync(galleryDir).filter((f) => exts.has(path.extname(f).toLowerCase())).sort()
+  : [];
+
+const images = files.map((f) => ({
+  src: `/gallery/${f}`,
+  alt: path.basename(f, path.extname(f)).replaceAll(/[-_]/g, ' '),
+}));
+---
+
+<section id="gallery" class="gallery-section">
+  <div class="container">
+    <h2 class="section-heading">Gallery</h2>
+  </div>
+  <div class="gallery-track" role="region" aria-label="Photo gallery" tabindex="0">
+    <div class="gallery-spacer"></div>
+    {images.map((img) => (
+      <div class="gallery-card">
+        <img src={img.src} alt={img.alt} loading="lazy" draggable="false" />
+      </div>
+    ))}
+    <div class="gallery-spacer"></div>
+  </div>
+  <div class="container">
+    <p class="gallery-hint">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+      </svg>
+      Drag or scroll to explore
+    </p>
+  </div>
+</section>
+
+<script>
+  const track = document.querySelector('.gallery-track') as HTMLElement;
+  if (track) {
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      track.classList.add('grabbing');
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+    });
+
+    track.addEventListener('mouseleave', () => {
+      isDown = false;
+      track.classList.remove('grabbing');
+    });
+
+    track.addEventListener('mouseup', () => {
+      isDown = false;
+      track.classList.remove('grabbing');
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      track.scrollLeft = scrollLeft - walk;
+    });
+  }
+</script>
+
+<style>
+  .gallery-section {
+    padding-block: var(--section-py);
+    overflow: hidden;
+  }
+
+  .gallery-track {
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    padding-block: var(--space-8);
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-track.grabbing {
+    cursor: grabbing;
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .gallery-spacer {
+    flex-shrink: 0;
+    width: max(1rem, calc((100vw - 72rem) / 2 + var(--container-padding) - var(--space-6)));
+  }
+
+  .gallery-card {
+    flex-shrink: 0;
+    width: clamp(280px, 40vw, 500px);
+    scroll-snap-align: center;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    box-shadow: 0 4px 24px rgba(45, 42, 38, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: var(--color-bg-elevated);
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(45, 42, 38, 0.15);
+  }
+
+  .gallery-track.grabbing .gallery-card {
+    transform: none;
+    box-shadow: 0 4px 24px rgba(45, 42, 38, 0.08);
+  }
+
+  .gallery-card img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .gallery-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-faint);
+    font-size: var(--text-sm);
+    margin-top: var(--space-4);
+  }
+
+  .gallery-hint svg {
+    animation: nudge 2s ease-in-out infinite;
+  }
+
+  @keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+  }
+
+  @media (max-width: 767px) {
+    .gallery-card {
+      width: 75vw;
+    }
+
+    .gallery-spacer {
+      width: var(--container-padding);
+    }
+  }
+</style>
