@@ -1,5 +1,5 @@
 ---
-const clips = [
+const bestPlays = [
   {
     title: 'AK-47 Ace',
     description: 'Clean AK spray control for the ace.',
@@ -16,6 +16,24 @@ const clips = [
     videoSrc: '/videos/dust_quick_scoeps.mp4',
   },
 ];
+
+const fumbles = [
+  {
+    title: 'Coming Soon',
+    description: 'Add your first fumble clip.',
+    videoSrc: null,
+  },
+  {
+    title: 'Coming Soon',
+    description: 'Add your second fumble clip.',
+    videoSrc: null,
+  },
+  {
+    title: 'Coming Soon',
+    description: 'Add your third fumble clip.',
+    videoSrc: null,
+  },
+];
 ---
 
 <section id="cs2" class="cs2 section">
@@ -24,26 +42,115 @@ const clips = [
     <p class="cs2-intro">
       When I'm not building websites, I'm grinding CS2. Here are some of my highlights.
     </p>
+  </div>
 
-    <div class="clips-grid">
-      {clips.map((clip) => (
-        <div class="clip-card">
-          <div class="clip-embed">
-            <video
-              src={clip.videoSrc}
-              controls
-              preload="metadata"
-              playsinline
-            />
-          </div>
-          <div class="clip-info">
-            <h3 class="clip-title">{clip.title}</h3>
-            <p class="clip-desc">{clip.description}</p>
+  <!-- Top 3 Best Plays -->
+  <div class="container">
+    <h3 class="carousel-title">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      Top 3 Best Plays
+    </h3>
+  </div>
+
+  <div class="swiper-container" data-swiper="best">
+    <div class="swiper-wrapper">
+      {bestPlays.map((clip, i) => (
+        <div class="swiper-slide" data-index={i}>
+          <div class="clip-card">
+            <div class="clip-rank">#{i + 1}</div>
+            <div class="clip-embed">
+              <video
+                src={clip.videoSrc}
+                controls
+                preload="metadata"
+                playsinline
+              />
+            </div>
+            <div class="clip-info">
+              <h4 class="clip-title">{clip.title}</h4>
+              <p class="clip-desc">{clip.description}</p>
+            </div>
           </div>
         </div>
       ))}
     </div>
+    <div class="swiper-nav">
+      <button class="swiper-btn prev" aria-label="Previous slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <div class="swiper-dots"></div>
+      <button class="swiper-btn next" aria-label="Next slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 
+  <!-- Top 3 Fumbles -->
+  <div class="container" style="margin-top: var(--space-16);">
+    <h3 class="carousel-title fumbles">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
+        <line x1="9" y1="9" x2="9.01" y2="9"/>
+        <line x1="15" y1="9" x2="15.01" y2="9"/>
+      </svg>
+      Top 3 Fumbles
+    </h3>
+  </div>
+
+  <div class="swiper-container fumbles-swiper" data-swiper="fumbles">
+    <div class="swiper-wrapper">
+      {fumbles.map((clip, i) => (
+        <div class="swiper-slide" data-index={i}>
+          <div class="clip-card fumble-card">
+            <div class="clip-rank fumble-rank">#{i + 1}</div>
+            <div class="clip-embed">
+              {clip.videoSrc ? (
+                <video
+                  src={clip.videoSrc}
+                  controls
+                  preload="metadata"
+                  playsinline
+                />
+              ) : (
+                <div class="clip-placeholder">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  <span>Add Video</span>
+                </div>
+              )}
+            </div>
+            <div class="clip-info">
+              <h4 class="clip-title">{clip.title}</h4>
+              <p class="clip-desc">{clip.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="swiper-nav">
+      <button class="swiper-btn prev" aria-label="Previous slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <div class="swiper-dots"></div>
+      <button class="swiper-btn next" aria-label="Next slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="container" style="margin-top: var(--space-12);">
     <div class="cs2-links">
       <a
         href="https://leetify.com/app/profile/76561198992699836"
@@ -78,6 +185,158 @@ const clips = [
   </div>
 </section>
 
+<script>
+  class CoverflowSwiper {
+    container: HTMLElement;
+    wrapper: HTMLElement;
+    slides: HTMLElement[];
+    currentIndex: number = 1;
+    dotsContainer: HTMLElement;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.wrapper = container.querySelector('.swiper-wrapper') as HTMLElement;
+      this.slides = Array.from(container.querySelectorAll('.swiper-slide'));
+      this.dotsContainer = container.querySelector('.swiper-dots') as HTMLElement;
+
+      this.init();
+    }
+
+    init() {
+      // Create dots
+      this.slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'swiper-dot';
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', () => this.goTo(i));
+        this.dotsContainer.appendChild(dot);
+      });
+
+      // Navigation buttons
+      const prevBtn = this.container.querySelector('.swiper-btn.prev');
+      const nextBtn = this.container.querySelector('.swiper-btn.next');
+
+      prevBtn?.addEventListener('click', () => this.prev());
+      nextBtn?.addEventListener('click', () => this.next());
+
+      // Keyboard navigation
+      this.container.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') this.prev();
+        if (e.key === 'ArrowRight') this.next();
+      });
+
+      // Touch/drag support
+      let startX = 0;
+      let isDragging = false;
+
+      this.wrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX;
+      });
+
+      this.wrapper.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX;
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      this.wrapper.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const diff = startX - e.pageX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.next();
+          else this.prev();
+          isDragging = false;
+        }
+      });
+
+      this.wrapper.addEventListener('touchend', (e) => {
+        const diff = startX - e.changedTouches[0].pageX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.next();
+          else this.prev();
+        }
+      });
+
+      // Click on side slides to navigate
+      this.slides.forEach((slide, i) => {
+        slide.addEventListener('click', () => {
+          if (i !== this.currentIndex) {
+            this.goTo(i);
+          }
+        });
+      });
+
+      this.update();
+    }
+
+    goTo(index: number) {
+      // Loop around
+      if (index < 0) {
+        this.currentIndex = this.slides.length - 1;
+      } else if (index >= this.slides.length) {
+        this.currentIndex = 0;
+      } else {
+        this.currentIndex = index;
+      }
+      this.update();
+    }
+
+    prev() {
+      this.goTo(this.currentIndex - 1);
+    }
+
+    next() {
+      this.goTo(this.currentIndex + 1);
+    }
+
+    update() {
+      const len = this.slides.length;
+      this.slides.forEach((slide, i) => {
+        let offset = i - this.currentIndex;
+
+        // Handle wrap-around for infinite loop visual
+        if (offset > len / 2) offset -= len;
+        if (offset < -len / 2) offset += len;
+
+        slide.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
+
+        if (offset === 0) {
+          slide.classList.add('active');
+        } else if (offset === -1 || (this.currentIndex === 0 && i === len - 1)) {
+          slide.classList.add('prev');
+        } else if (offset === 1 || (this.currentIndex === len - 1 && i === 0)) {
+          slide.classList.add('next');
+        } else if (offset < -1) {
+          slide.classList.add('far-prev');
+        } else {
+          slide.classList.add('far-next');
+        }
+      });
+
+      // Update dots
+      const dots = this.dotsContainer.querySelectorAll('.swiper-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === this.currentIndex);
+      });
+
+      // Buttons always enabled for infinite loop
+      const prevBtn = this.container.querySelector('.swiper-btn.prev') as HTMLButtonElement;
+      const nextBtn = this.container.querySelector('.swiper-btn.next') as HTMLButtonElement;
+
+      if (prevBtn) prevBtn.disabled = false;
+      if (nextBtn) nextBtn.disabled = false;
+    }
+  }
+
+  // Initialize all swipers
+  document.querySelectorAll('.swiper-container').forEach((container) => {
+    new CoverflowSwiper(container as HTMLElement);
+  });
+</script>
+
 <style>
   .cs2-intro {
     font-size: var(--text-lg);
@@ -87,55 +346,251 @@ const clips = [
     line-height: 1.6;
   }
 
-  .clips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: var(--space-8);
-    margin-bottom: var(--space-12);
+  .carousel-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
   }
 
-  .clip-card {
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border-light);
-    border-radius: 0.75rem;
+  .carousel-title svg {
+    color: var(--color-accent);
+  }
+
+  .carousel-title.fumbles svg {
+    color: #e57373;
+  }
+
+  /* Swiper Container */
+  .swiper-container {
+    position: relative;
+    width: 100%;
+    padding: var(--space-8) 0;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .clip-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(45, 42, 38, 0.06);
+  .swiper-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 580px;
+    position: relative;
+    cursor: grab;
+  }
+
+  .swiper-wrapper:active {
+    cursor: grabbing;
+  }
+
+  /* Slides */
+  .swiper-slide {
+    position: absolute;
+    width: clamp(500px, 60vw, 800px);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .swiper-slide.active {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .swiper-slide.prev {
+    transform: translateX(-70%) scale(0.75) rotateY(15deg);
+    opacity: 0.6;
+    z-index: 5;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .swiper-slide.next {
+    transform: translateX(70%) scale(0.75) rotateY(-15deg);
+    opacity: 0.6;
+    z-index: 5;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .swiper-slide.far-prev {
+    transform: translateX(-140%) scale(0.5) rotateY(25deg);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .swiper-slide.far-next {
+    transform: translateX(140%) scale(0.5) rotateY(-25deg);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  /* Clip Card */
+  .clip-card {
+    position: relative;
+    background: var(--color-bg-elevated);
+    border: 3px solid var(--color-border);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(45, 42, 38, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .swiper-slide.active .clip-card {
+    border-color: var(--color-accent);
+    box-shadow: 0 20px 60px rgba(45, 42, 38, 0.2), 0 0 0 4px rgba(var(--color-accent-rgb, 139, 90, 43), 0.15);
+  }
+
+  .fumbles-swiper .swiper-slide.active .clip-card {
+    border-color: #e57373;
+    box-shadow: 0 20px 60px rgba(45, 42, 38, 0.2), 0 0 0 4px rgba(229, 115, 115, 0.15);
+  }
+
+  .clip-rank {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 10;
+    background: var(--color-accent);
+    color: white;
+    font-weight: 700;
+    font-size: var(--text-base);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  .fumble-rank {
+    background: #e57373;
+  }
+
+  .fumble-card {
+    border-color: rgba(229, 115, 115, 0.3);
   }
 
   .clip-embed {
     aspect-ratio: 16 / 9;
     background: var(--color-bg-muted);
+    overflow: hidden;
   }
 
   .clip-embed video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.75rem 0.75rem 0 0;
+    display: block;
+  }
+
+  .clip-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    color: var(--color-text-faint);
+    background: linear-gradient(135deg, var(--color-bg-muted) 0%, var(--color-bg-elevated) 100%);
+  }
+
+  .clip-placeholder svg {
+    opacity: 0.4;
+  }
+
+  .clip-placeholder span {
+    font-size: var(--text-base);
+    font-weight: 500;
   }
 
   .clip-info {
-    padding: var(--space-5) var(--space-6);
+    padding: var(--space-6) var(--space-8);
   }
 
   .clip-title {
     font-family: var(--font-body);
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     font-weight: 600;
     letter-spacing: 0;
-    margin-bottom: var(--space-1);
+    margin-bottom: var(--space-2);
   }
 
   .clip-desc {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     color: var(--color-text-muted);
   }
 
+  /* Navigation */
+  .swiper-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .swiper-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .swiper-btn:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: scale(1.05);
+  }
+
+  .swiper-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .swiper-dots {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .swiper-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+
+  .swiper-dot:hover {
+    border-color: var(--color-accent);
+  }
+
+  .swiper-dot.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: scale(1.2);
+  }
+
+  .fumbles-swiper .swiper-dot.active {
+    background: #e57373;
+    border-color: #e57373;
+  }
+
+  /* Links */
   .cs2-links {
     display: flex;
     flex-wrap: wrap;
@@ -158,5 +613,56 @@ const clips = [
   .cs2-link:hover {
     border-color: var(--color-accent);
     background: var(--color-accent-bg);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .swiper-slide {
+      width: clamp(400px, 75vw, 600px);
+    }
+
+    .swiper-slide.prev {
+      transform: translateX(-55%) scale(0.7);
+    }
+
+    .swiper-slide.next {
+      transform: translateX(55%) scale(0.7);
+    }
+
+    .swiper-wrapper {
+      min-height: 480px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .swiper-slide {
+      width: 90vw;
+    }
+
+    .swiper-slide.prev,
+    .swiper-slide.next {
+      opacity: 0.3;
+      transform: translateX(-85%) scale(0.55);
+    }
+
+    .swiper-slide.next {
+      transform: translateX(85%) scale(0.55);
+    }
+
+    .swiper-wrapper {
+      min-height: 420px;
+    }
+
+    .clip-info {
+      padding: var(--space-4) var(--space-5);
+    }
+
+    .clip-title {
+      font-size: var(--text-base);
+    }
+
+    .clip-desc {
+      font-size: var(--text-sm);
+    }
   }
 </style>
