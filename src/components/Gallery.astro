@@ -19,57 +19,167 @@ const images = files.map((f) => ({
   <div class="container">
     <h2 class="section-heading">Gallery</h2>
   </div>
-  <div class="gallery-track" role="region" aria-label="Photo gallery" tabindex="0">
-    <div class="gallery-spacer"></div>
-    {images.map((img) => (
-      <div class="gallery-card">
-        <img src={img.src} alt={img.alt} loading="lazy" draggable="false" />
-      </div>
-    ))}
-    <div class="gallery-spacer"></div>
-  </div>
-  <div class="container">
-    <p class="gallery-hint">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
-      </svg>
-      Drag or scroll to explore
-    </p>
+
+  <div class="gallery-swiper" data-gallery-swiper>
+    <div class="gallery-swiper-wrapper">
+      {images.map((img, i) => (
+        <div class="gallery-slide" data-index={i}>
+          <div class="gallery-card">
+            <img src={img.src} alt={img.alt} loading="lazy" draggable="false" />
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="gallery-nav">
+      <button class="gallery-btn prev" aria-label="Previous photo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <div class="gallery-dots"></div>
+      <button class="gallery-btn next" aria-label="Next photo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </section>
 
 <script>
-  const track = document.querySelector('.gallery-track') as HTMLElement;
-  if (track) {
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
+  class GallerySwiper {
+    container: HTMLElement;
+    wrapper: HTMLElement;
+    slides: HTMLElement[];
+    currentIndex: number = 0;
+    dotsContainer: HTMLElement;
 
-    track.addEventListener('mousedown', (e) => {
-      isDown = true;
-      track.classList.add('grabbing');
-      startX = e.pageX - track.offsetLeft;
-      scrollLeft = track.scrollLeft;
-    });
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.wrapper = container.querySelector('.gallery-swiper-wrapper') as HTMLElement;
+      this.slides = Array.from(container.querySelectorAll('.gallery-slide'));
+      this.dotsContainer = container.querySelector('.gallery-dots') as HTMLElement;
 
-    track.addEventListener('mouseleave', () => {
-      isDown = false;
-      track.classList.remove('grabbing');
-    });
+      this.init();
+    }
 
-    track.addEventListener('mouseup', () => {
-      isDown = false;
-      track.classList.remove('grabbing');
-    });
+    init() {
+      this.slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'gallery-dot';
+        dot.setAttribute('aria-label', `Go to photo ${i + 1}`);
+        dot.addEventListener('click', () => this.goTo(i));
+        this.dotsContainer.appendChild(dot);
+      });
 
-    track.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      track.scrollLeft = scrollLeft - walk;
-    });
+      const prevBtn = this.container.querySelector('.gallery-btn.prev');
+      const nextBtn = this.container.querySelector('.gallery-btn.next');
+
+      prevBtn?.addEventListener('click', () => this.prev());
+      nextBtn?.addEventListener('click', () => this.next());
+
+      this.container.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') this.prev();
+        if (e.key === 'ArrowRight') this.next();
+      });
+
+      let startX = 0;
+      let isDragging = false;
+
+      this.wrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX;
+      });
+
+      this.wrapper.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX;
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      this.wrapper.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const diff = startX - e.pageX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.next();
+          else this.prev();
+          isDragging = false;
+        }
+      });
+
+      this.wrapper.addEventListener('touchend', (e) => {
+        const diff = startX - e.changedTouches[0].pageX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.next();
+          else this.prev();
+        }
+      });
+
+      this.slides.forEach((slide, i) => {
+        slide.addEventListener('click', () => {
+          if (i !== this.currentIndex) {
+            this.goTo(i);
+          }
+        });
+      });
+
+      this.update();
+    }
+
+    goTo(index: number) {
+      if (index < 0) {
+        this.currentIndex = this.slides.length - 1;
+      } else if (index >= this.slides.length) {
+        this.currentIndex = 0;
+      } else {
+        this.currentIndex = index;
+      }
+      this.update();
+    }
+
+    prev() {
+      this.goTo(this.currentIndex - 1);
+    }
+
+    next() {
+      this.goTo(this.currentIndex + 1);
+    }
+
+    update() {
+      const len = this.slides.length;
+      this.slides.forEach((slide, i) => {
+        let offset = i - this.currentIndex;
+
+        if (offset > len / 2) offset -= len;
+        if (offset < -len / 2) offset += len;
+
+        slide.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
+
+        if (offset === 0) {
+          slide.classList.add('active');
+        } else if (offset === -1 || (this.currentIndex === 0 && i === len - 1)) {
+          slide.classList.add('prev');
+        } else if (offset === 1 || (this.currentIndex === len - 1 && i === 0)) {
+          slide.classList.add('next');
+        } else if (offset < -1) {
+          slide.classList.add('far-prev');
+        } else {
+          slide.classList.add('far-next');
+        }
+      });
+
+      const dots = this.dotsContainer.querySelectorAll('.gallery-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === this.currentIndex);
+      });
+    }
   }
+
+  document.querySelectorAll('[data-gallery-swiper]').forEach((container) => {
+    new GallerySwiper(container as HTMLElement);
+  });
 </script>
 
 <style>
@@ -78,56 +188,84 @@ const images = files.map((f) => ({
     overflow: hidden;
   }
 
-  .gallery-track {
-    display: flex;
-    gap: var(--space-6);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    cursor: grab;
-    padding-block: var(--space-8);
-
-    /* Hide scrollbar but keep functionality */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .gallery-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .gallery-track.grabbing {
-    cursor: grabbing;
-    scroll-behavior: auto;
-    scroll-snap-type: none;
-  }
-
-  .gallery-spacer {
-    flex-shrink: 0;
-    width: max(1rem, calc((100vw - 72rem) / 2 + var(--container-padding) - var(--space-6)));
-  }
-
-  .gallery-card {
-    flex-shrink: 0;
-    width: clamp(280px, 40vw, 500px);
-    scroll-snap-align: center;
-    border-radius: 0.75rem;
+  .gallery-swiper {
+    position: relative;
+    width: 100%;
+    padding: var(--space-8) 0;
     overflow: hidden;
-    border: 2px solid var(--color-border);
-    box-shadow: 0 4px 24px rgba(45, 42, 38, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .gallery-swiper-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 520px;
+    position: relative;
+    cursor: grab;
+  }
+
+  .gallery-swiper-wrapper:active {
+    cursor: grabbing;
+  }
+
+  /* Slides */
+  .gallery-slide {
+    position: absolute;
+    width: clamp(320px, 40vw, 500px);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .gallery-slide.active {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .gallery-slide.prev {
+    transform: translateX(-70%) scale(0.75) rotateY(15deg);
+    opacity: 0.6;
+    z-index: 5;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .gallery-slide.next {
+    transform: translateX(70%) scale(0.75) rotateY(-15deg);
+    opacity: 0.6;
+    z-index: 5;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .gallery-slide.far-prev {
+    transform: translateX(-140%) scale(0.5) rotateY(25deg);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .gallery-slide.far-next {
+    transform: translateX(140%) scale(0.5) rotateY(-25deg);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  /* Card */
+  .gallery-card {
     background: var(--color-bg-elevated);
+    border: 3px solid var(--color-border);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(45, 42, 38, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
-  .gallery-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(45, 42, 38, 0.15);
-  }
-
-  .gallery-track.grabbing .gallery-card {
-    transform: none;
-    box-shadow: 0 4px 24px rgba(45, 42, 38, 0.08);
+  .gallery-slide.active .gallery-card {
+    border-color: var(--color-accent);
+    box-shadow: 0 20px 60px rgba(45, 42, 38, 0.2), 0 0 0 4px rgba(var(--color-accent-rgb, 139, 90, 43), 0.15);
   }
 
   .gallery-card img {
@@ -139,31 +277,97 @@ const images = files.map((f) => ({
     pointer-events: none;
   }
 
-  .gallery-hint {
-    display: inline-flex;
+  /* Navigation */
+  .gallery-nav {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .gallery-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .gallery-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: scale(1.05);
+  }
+
+  .gallery-dots {
+    display: flex;
     gap: var(--space-2);
-    color: var(--color-text-faint);
-    font-size: var(--text-sm);
-    margin-top: var(--space-4);
   }
 
-  .gallery-hint svg {
-    animation: nudge 2s ease-in-out infinite;
+  .gallery-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
   }
 
-  @keyframes nudge {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(4px); }
+  .gallery-dot:hover {
+    border-color: var(--color-accent);
+  }
+
+  .gallery-dot.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: scale(1.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .gallery-slide {
+      width: clamp(280px, 60vw, 450px);
+    }
+
+    .gallery-slide.prev {
+      transform: translateX(-55%) scale(0.7);
+    }
+
+    .gallery-slide.next {
+      transform: translateX(55%) scale(0.7);
+    }
+
+    .gallery-swiper-wrapper {
+      min-height: 450px;
+    }
   }
 
   @media (max-width: 767px) {
-    .gallery-card {
-      width: 75vw;
+    .gallery-slide {
+      width: 80vw;
     }
 
-    .gallery-spacer {
-      width: var(--container-padding);
+    .gallery-slide.prev,
+    .gallery-slide.next {
+      opacity: 0.3;
+      transform: translateX(-85%) scale(0.55);
+    }
+
+    .gallery-slide.next {
+      transform: translateX(85%) scale(0.55);
+    }
+
+    .gallery-swiper-wrapper {
+      min-height: 400px;
     }
   }
 </style>
