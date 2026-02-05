@@ -192,14 +192,13 @@ const images = files.map((f) => ({
     position: relative;
     width: 100%;
     padding: var(--space-8) 0;
-    overflow: hidden;
   }
 
   .gallery-swiper-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 520px;
+    min-height: 700px;
     position: relative;
     cursor: grab;
   }
@@ -270,8 +269,7 @@ const images = files.map((f) => ({
 
   .gallery-card img {
     width: 100%;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
+    height: auto;
     display: block;
     user-select: none;
     pointer-events: none;
@@ -347,7 +345,7 @@ const images = files.map((f) => ({
     }
 
     .gallery-swiper-wrapper {
-      min-height: 450px;
+      min-height: 500px;
     }
   }
 
@@ -367,7 +365,7 @@ const images = files.map((f) => ({
     }
 
     .gallery-swiper-wrapper {
-      min-height: 400px;
+      min-height: 450px;
     }
   }
 </style>
