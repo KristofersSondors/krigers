@@ -1,0 +1,82 @@
+---
+const categories = [
+  {
+    title: 'Frontend',
+    skills: ['HTML5 & Semantic Markup', 'CSS3 / Sass', 'JavaScript (ES6+)', 'TypeScript', 'Astro', 'React'],
+  },
+  {
+    title: 'Styling & UI',
+    skills: ['Responsive Design', 'CSS Grid & Flexbox', 'Tailwind CSS', 'CSS Animations', 'Figma'],
+  },
+  {
+    title: 'Tools & Workflow',
+    skills: ['Git & GitHub', 'VS Code', 'npm / pnpm', 'Cloudflare Pages', 'Vite'],
+  },
+  {
+    title: 'Learning',
+    skills: ['Node.js', 'REST APIs', 'Databases (SQL)', 'Testing'],
+  },
+];
+---
+
+<section id="skills" class="skills section">
+  <div class="container">
+    <h2 class="section-heading">Skills & Technologies</h2>
+    <div class="skills-grid">
+      {categories.map((cat) => (
+        <div class="skill-card">
+          <h3 class="skill-title">{cat.title}</h3>
+          <ul class="skill-list">
+            {cat.skills.map((skill) => (
+              <li class="skill-item">{skill}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-8);
+  }
+
+  .skill-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.75rem;
+    padding: var(--space-8);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .skill-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(45, 42, 38, 0.06);
+  }
+
+  .skill-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-6);
+    padding-left: var(--space-4);
+    border-left: 3px solid var(--color-accent);
+  }
+
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skill-item {
+    padding: var(--space-2) 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .skill-item:last-child {
+    border-bottom: none;
+  }
+</style>

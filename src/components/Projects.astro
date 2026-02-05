@@ -1,0 +1,198 @@
+---
+const projects = [
+  {
+    title: 'E-Commerce Dashboard',
+    description: 'A responsive admin dashboard for managing products, orders, and analytics. Built with a focus on clean UI and fast load times.',
+    tech: ['React', 'TypeScript', 'CSS Modules'],
+    liveUrl: '#',
+    repoUrl: '#',
+    featured: true,
+  },
+  {
+    title: 'Weather App',
+    description: 'Minimal weather application with location-based forecasts, responsive design, and smooth animations.',
+    tech: ['JavaScript', 'REST API', 'CSS'],
+    liveUrl: '#',
+    repoUrl: '#',
+    featured: false,
+  },
+  {
+    title: 'Portfolio Template',
+    description: 'A lightweight, accessible portfolio template built with Astro. Static output, zero JavaScript, fast everywhere.',
+    tech: ['Astro', 'CSS', 'HTML'],
+    liveUrl: '#',
+    repoUrl: '#',
+    featured: false,
+  },
+];
+---
+
+<section id="projects" class="projects section">
+  <div class="container">
+    <h2 class="section-heading">Projects</h2>
+    <div class="projects-grid">
+      {projects.map((project) => (
+        <article class:list={['project-card', { featured: project.featured }]}>
+          <div class="project-image">
+            <div class="project-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span>Screenshot</span>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">{project.title}</h3>
+            <p class="project-desc">{project.description}</p>
+            <ul class="project-tech">
+              {project.tech.map((t) => (
+                <li class="tech-tag">{t}</li>
+              ))}
+            </ul>
+            <div class="project-links">
+              {project.liveUrl !== '#' ? (
+                <a href={project.liveUrl} target="_blank" rel="noopener" class="project-link">
+                  Live Site <span aria-hidden="true">&rarr;</span>
+                </a>
+              ) : (
+                <span class="project-link placeholder-link">Coming Soon</span>
+              )}
+              {project.repoUrl !== '#' && (
+                <a href={project.repoUrl} target="_blank" rel="noopener" class="project-link">
+                  Source Code <span aria-hidden="true">&rarr;</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--space-8);
+  }
+
+  .project-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(45, 42, 38, 0.08);
+  }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .project-card.featured {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  .project-image {
+    overflow: hidden;
+  }
+
+  .project-image-placeholder {
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    color: var(--color-text-faint);
+    transition: transform 0.4s ease;
+  }
+
+  .project-image-placeholder span {
+    font-size: var(--text-xs);
+    font-weight: 500;
+  }
+
+  .project-card:hover .project-image-placeholder {
+    transform: scale(1.03);
+  }
+
+  .project-content {
+    padding: var(--space-6) var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .project-title {
+    font-size: var(--text-xl);
+  }
+
+  .project-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .tech-tag {
+    background: var(--color-accent-bg);
+    color: var(--color-accent);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 9999px;
+  }
+
+  .project-links {
+    display: flex;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .project-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: color 0.2s ease;
+  }
+
+  .project-link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .project-link span {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .project-link:hover span {
+    transform: translateX(4px);
+  }
+
+  .placeholder-link {
+    color: var(--color-text-faint);
+    cursor: default;
+  }
+
+  .placeholder-link:hover {
+    color: var(--color-text-faint);
+  }
+</style>

@@ -1,0 +1,124 @@
+<section id="about" class="about section">
+  <div class="container">
+    <h2 class="section-heading">About Me</h2>
+    <div class="about-grid">
+      <div class="about-photo">
+        <div class="photo-frame">
+          <div class="photo-placeholder">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>Your photo here</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p>
+          I'm a web developer based in fockin Zaķumuiža, Latvia, currently studying at
+          Riga Business School. I focus on building clean(not very), fast(slow ah shi), and accessible(fuck that)
+          websites that solve real(shit) problems.
+        </p>
+        <p>
+          I enjoy working with modern web technologies and learning new tools like Figņa
+          to create better user experiences. When I'm not coding, you can find
+          me raging in CS2 or exploring new tech(new beer).
+        </p>
+        <div class="about-facts">
+          <div class="fact">
+            <span class="fact-label">Location</span>
+            <span class="fact-value">Riga, Latvia</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Education</span>
+            <span class="fact-value">Riga Business School</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Focus</span>
+            <span class="fact-value">Web Development</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Languages</span>
+            <span class="fact-value">Latvian, English</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr 1.5fr;
+      gap: var(--space-16);
+    }
+  }
+
+  .photo-frame {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    box-shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
+  }
+
+  .photo-placeholder {
+    aspect-ratio: 4 / 5;
+    background: var(--color-bg-elevated);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    color: var(--color-text-faint);
+  }
+
+  .photo-placeholder span {
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .about-content p {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    margin-bottom: var(--space-4);
+    max-width: 55ch;
+  }
+
+  .about-content p:last-of-type {
+    margin-bottom: var(--space-8);
+  }
+
+  .about-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .fact-label {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .fact-value {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Projects from '../components/Projects.astro';
+import CS2Section from '../components/CS2Section.astro';
+import Experience from '../components/Experience.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Kristers Krīgers — Web Developer"
+  description="Portfolio of Kristers Krīgers, a web developer based in Riga, Latvia. Building clean, performant websites."
+>
+  <Header />
+  <main id="main-content">
+    <Hero />
+    <About />
+    <Skills />
+    <Projects />
+    <CS2Section />
+    <Experience />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>
