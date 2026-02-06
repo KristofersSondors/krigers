@@ -260,11 +260,11 @@ const fumbles = [
         }
       });
 
-      // Click on side slides to navigate
+      // Click on side slides to navigate and auto-play
       this.slides.forEach((slide, i) => {
         slide.addEventListener('click', () => {
           if (i !== this.currentIndex) {
-            this.goTo(i);
+            this.goTo(i, true);
           }
         });
       });
@@ -272,7 +272,18 @@ const fumbles = [
       this.update();
     }
 
-    goTo(index: number) {
+    pauseAllVideos() {
+      this.slides.forEach((slide) => {
+        const video = slide.querySelector('video');
+        if (video) {
+          video.pause();
+        }
+      });
+    }
+
+    goTo(index: number, autoplay: boolean = false) {
+      this.pauseAllVideos();
+
       // Loop around
       if (index < 0) {
         this.currentIndex = this.slides.length - 1;
@@ -282,6 +293,14 @@ const fumbles = [
         this.currentIndex = index;
       }
       this.update();
+
+      if (autoplay) {
+        const activeSlide = this.slides[this.currentIndex];
+        const video = activeSlide?.querySelector('video');
+        if (video) {
+          video.play().catch(() => {});
+        }
+      }
     }
 
     prev() {
@@ -313,6 +332,18 @@ const fumbles = [
           slide.classList.add('far-prev');
         } else {
           slide.classList.add('far-next');
+        }
+      });
+
+      // Enable controls only on the active slide's video
+      this.slides.forEach((slide, i) => {
+        const video = slide.querySelector('video');
+        if (video) {
+          if (i === this.currentIndex) {
+            video.setAttribute('controls', '');
+          } else {
+            video.removeAttribute('controls');
+          }
         }
       });
 
